@@ -1,4 +1,4 @@
-HOME ?= /home/ubuntu
+export HOME ?= /home/ubuntu
 SONOBUOY ?= 0.57.3
 
 deps: helm kubectl tofu sonobuoy
