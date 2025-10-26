@@ -24,7 +24,7 @@ resource "openstack_compute_instance_v2" "bastion" {
               curl -fsSL https://tailscale.com/install.sh | sh
               /usr/bin/tailscale up --ssh --advertise-tags=tag:bastion --authkey=${var.tailscale_authkey}
 
-              # get bootstrap scripts
+              # get bootstrap scripts...
               git clone --depth 1 https://github.com/dniel/terraform-openstack-homelab
               cd terraform-openstack-homelab
               apt install make -y

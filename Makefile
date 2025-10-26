@@ -9,21 +9,26 @@ arkade:
 # Install latest helm
 helm: arkade
 	arkade get helm
+	sudo mv /home/ubuntu/.arkade/bin/helm /usr/local/bin/
 
 # Install known latest tofu
 tofu: arkade
 	arkade get tofu
+	sudo mv /home/ubuntu/.arkade/bin/tofu /usr/local/bin/
 
 # Install latest kubectl
 kubectl: arkade
 	arkade get kubectl
+	sudo mv /home/ubuntu/.arkade/bin/kubectl /usr/local/bin/
 
 # Install latest known clusterctl
 clusterctl: arkade
 	arkade get clusterctl
+	sudo mv /home/ubuntu/.arkade/bin/clusterctl /usr/local/bin/
 
 jq: arkade
 	arkade get jq
+	sudo mv /home/ubuntu/.arkade/bin/jq /usr/local/bin/
 
 # Install latest known sonobuoy
 sonobuoy: jq
