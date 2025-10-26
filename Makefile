@@ -1,8 +1,5 @@
-HELM ?=v3.19.0
+HOME ?= /home/ubuntu
 SONOBUOY ?= 0.57.3
-
-KUBECTL ?= $(shell curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)
-CLUSTERCTL ?= 0.4.0
 
 deps: helm kubectl tofu sonobuoy
 
