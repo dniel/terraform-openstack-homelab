@@ -1,51 +1,32 @@
-HELM ?=v3.6.1
-SONOBUOY ?= 0.53.2
-TERRAFORM ?= 1.0.3
+HELM ?=v3.19.0
+SONOBUOY ?= 0.57.3
+
 KUBECTL ?= $(shell curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)
 CLUSTERCTL ?= 0.4.0
 
-OS = $(shell lsb_release -si || echo CentOS)
-ifeq ($(OS),Ubuntu)
-	PM = apt
-else ifeq ($(OS),CentOS)
-	PM = dnf
-else
-	exit 1
-endif
+deps: helm kubectl tofu sonobuoy
 
-deps: helm kubectl terraform sonobuoy
+arkade:
+	curl -sLS https://get.arkade.dev | sh
 
-# Install helm (version 3)
-helm:
-	curl -L https://get.helm.sh/helm-${HELM}-linux-amd64.tar.gz --output helm.tar.gz && \
-	mkdir -p tmp && \
-	tar -xzf helm.tar.gz -C tmp/ && \
-	sudo mv tmp/linux-amd64/helm /usr/local/bin/helm && \
-	rm -rf helm.tar.gz tmp
+# Install latest helm
+helm: arkade
+	ark get helm
 
-unzip:
-	sudo ${PM} install unzip -y
-
-# Install known latest terraform
-terraform: unzip
-	curl -L https://releases.hashicorp.com/terraform/${TERRAFORM}/terraform_${TERRAFORM}_linux_amd64.zip --output terraform.zip && \
-	unzip terraform.zip && \
-	rm terraform.zip && \
-	sudo mv terraform /usr/local/bin/terraform
+# Install known latest tofu
+tofu: arkade
+	ark get tofu
 
 # Install latest kubectl
-kubectl:
-	curl -LO https://storage.googleapis.com/kubernetes-release/release/${KUBECTL}/bin/linux/amd64/kubectl && \
-	chmod +x kubectl && \
-	sudo mv kubectl /usr/local/bin/kubectl
+kubectl: arkade
+	ark get kubectl
 
 # Install latest known clusterctl
-clusterctl:
-	curl -L https://github.com/kubernetes-sigs/cluster-api/releases/download/v${CLUSTERCTL}/clusterctl-linux-amd64 -o clusterctl && \
-	chmod +x clusterctl && \
-	sudo mv clusterctl /usr/local/bin/clusterctl
-jq:
-	sudo ${PM} install jq -y
+clusterctl: arkade
+	ark get clusterctl
+
+jq: arkade
+	ark get jq
 
 # Install latest known sonobuoy
 sonobuoy: jq

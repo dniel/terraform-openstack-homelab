@@ -28,7 +28,7 @@ resource "openstack_compute_instance_v2" "bastion" {
               git clone --depth 1 https://github.com/dniel/terraform-openstack-homelab
               cd terraform-magnum
               apt install make -y
-              make helm kubectl clusterctl
+              make helm kubectl clusterctl tofu
               EOF
 
   network {
