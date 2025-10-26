@@ -25,7 +25,7 @@ resource "openstack_compute_instance_v2" "bastion" {
               /usr/bin/tailscale up --ssh --advertise-tags=tag:bastion --authkey=${var.tailscale_authkey}
 
               echo "Clone git"
-              git clone --depth 1 https://github.com/stackhpc/terraform-magnum
+              git clone --depth 1 https://github.com/dniel/terraform-openstack-homelab
               cd terraform-magnum
               apt install make -y
               make helm kubectl clusterctl
