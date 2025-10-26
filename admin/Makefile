@@ -11,22 +11,22 @@ arkade:
 
 # Install latest helm
 helm: arkade
-	ark get helm
+	arkade get helm
 
 # Install known latest tofu
 tofu: arkade
-	ark get tofu
+	arkade get tofu
 
 # Install latest kubectl
 kubectl: arkade
-	ark get kubectl
+	arkade get kubectl
 
 # Install latest known clusterctl
 clusterctl: arkade
-	ark get clusterctl
+	arkade get clusterctl
 
 jq: arkade
-	ark get jq
+	arkade get jq
 
 # Install latest known sonobuoy
 sonobuoy: jq
