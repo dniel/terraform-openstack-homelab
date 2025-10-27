@@ -20,20 +20,39 @@ resource "openstack_compute_instance_v2" "bastion" {
   security_groups = [var.bastion.security_group]
 
   user_data = <<-EOF
-              #!/bin/bash
-              curl -fsSL https://tailscale.com/install.sh | sh
-              /usr/bin/tailscale up --ssh --advertise-tags=tag:bastion --authkey=${var.tailscale_authkey}
+              #cloud-config
 
-              # get bootstrap scripts...
-              git clone --depth 1 https://github.com/dniel/terraform-openstack-homelab
-              cd terraform-openstack-homelab
-              apt install make -y
-              make helm kubectl clusterctl tofu
+              package_update: true
+              packages:
+                - make
+                - git
+
+              write_files:
+                - path: /home/ubuntu/.kube/config
+                  permissions: 0600
+                  encoding: b64
+                  content: ${base64encode(openstack_containerinfra_cluster_v1.homelab_cluster.kubeconfig.raw_config)}
+
+              runcmd:
+                - curl -fsSL https://tailscale.com/install.sh | sh
+                - /usr/bin/tailscale up --ssh --advertise-tags=tag:bastion --authkey=${var.tailscale_authkey}
+                - git clone --depth 1 https://github.com/dniel/terraform-openstack-homelab
+                - cd terraform-openstack-homelab && make helm kubectl clusterctl tofu
               EOF
 
   network {
     port = openstack_networking_port_v2.bastion.id
   }
+}
+
+resource "local_file" "kubeconfig_file" {
+  content  = openstack_containerinfra_cluster_v1.homelab_cluster.kubeconfig.raw_config
+  filename = "kubeconfig-${openstack_containerinfra_cluster_v1.homelab_cluster.name}.yaml"
+  file_permission = "0600" # Set appropriate permissions
+}
+
+output "kubeconfig_path" {
+  value = local_file.kubeconfig_file.filename
 }
 
 data "openstack_networking_network_v2" "external" {
