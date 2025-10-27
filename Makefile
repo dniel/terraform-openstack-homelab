@@ -1,10 +1,10 @@
-export HOME ?= /home/ubuntu
 SONOBUOY ?= 0.57.3
 
 deps: helm kubectl tofu sonobuoy
 
 arkade:
 	curl -sLS https://get.arkade.dev | sh
+	chown ubuntu:ubuntu /home/ubuntu/.arkade
 
 # Install latest helm
 helm: arkade

@@ -30,6 +30,8 @@ resource "openstack_compute_instance_v2" "bastion" {
               write_files:
                 - path: /home/ubuntu/.kube/config
                   permissions: 0600
+                  defer: true
+                  owner: 'ubuntu:ubuntu'
                   encoding: b64
                   content: ${base64encode(openstack_containerinfra_cluster_v1.homelab_cluster.kubeconfig.raw_config)}
 
@@ -37,7 +39,7 @@ resource "openstack_compute_instance_v2" "bastion" {
                 - curl -fsSL https://tailscale.com/install.sh | sh
                 - /usr/bin/tailscale up --ssh --advertise-tags=tag:bastion --authkey=${var.tailscale_authkey}
                 - git clone --depth 1 https://github.com/dniel/terraform-openstack-homelab
-                - cd terraform-openstack-homelab && make helm kubectl clusterctl tofu
+                - cd terraform-openstack-homelab && HOME=/home/ubuntu make helm kubectl clusterctl tofu
               EOF
 
   network {
