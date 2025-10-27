@@ -4,7 +4,7 @@ deps: helm kubectl tofu sonobuoy
 
 arkade:
 	curl -sLS https://get.arkade.dev | sh
-	chown -R ubuntu:ubuntu $$HOME/.arkade
+	mkdir $$HOME/.arkade && chown -R ubuntu:ubuntu $$HOME/.arkade
 
 # Install latest helm
 helm: arkade
