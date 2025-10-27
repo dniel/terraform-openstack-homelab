@@ -4,35 +4,35 @@ deps: helm kubectl tofu sonobuoy
 
 arkade:
 	curl -sLS https://get.arkade.dev | sh
-	chown -R ubuntu:ubuntu $HOME/.arkade
+	chown -R ubuntu:ubuntu $$HOME/.arkade
 
 # Install latest helm
 helm: arkade
 	arkade get helm
-	sudo mv $HOME/.arkade/bin/helm /usr/local/bin/
+	sudo mv $$HOME/.arkade/bin/helm /usr/local/bin/
 	sudo chmod +x /usr/local/bin/helm
 
 # Install known latest tofu
 tofu: arkade
 	arkade get tofu
-	sudo mv $HOME/.arkade/bin/tofu /usr/local/bin/
+	sudo mv $$HOME/.arkade/bin/tofu /usr/local/bin/
 	sudo chmod +x /usr/local/bin/tofu
 
 # Install latest kubectl
 kubectl: arkade
 	arkade get kubectl
-	sudo mv $HOME/.arkade/bin/kubectl /usr/local/bin/
+	sudo mv $$HOME/.arkade/bin/kubectl /usr/local/bin/
 	sudo chmod +x /usr/local/bin/kubectl
 
 # Install latest known clusterctl
 clusterctl: arkade
 	arkade get clusterctl
-	sudo mv $HOME/.arkade/bin/clusterctl /usr/local/bin/
+	sudo mv $$HOME/.arkade/bin/clusterctl /usr/local/bin/
 	sudo chmod +x /usr/local/bin/clusterctl
 
 jq: arkade
 	arkade get jq
-	sudo mv $HOME/.arkade/bin/jq /usr/local/bin/
+	sudo mv $$HOME/.arkade/bin/jq /usr/local/bin/
 	sudo chmod +x /usr/local/bin/jq
 
 # Install latest known sonobuoy
