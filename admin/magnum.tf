@@ -31,3 +31,9 @@ resource "openstack_containerinfra_cluster_v1" "homelab_cluster" {
     kube_tag = "v1.27.4"
   }
 }
+
+resource "local_file" "kubeconfig_file" {
+  content  = openstack_containerinfra_cluster_v1.homelab_cluster.kubeconfig.raw_config
+  filename = "kubeconfig-${openstack_containerinfra_cluster_v1.homelab_cluster.name}.yaml"
+  file_permission = "0600" # Set appropriate permissions
+}

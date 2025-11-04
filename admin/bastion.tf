@@ -1,7 +1,3 @@
-output "bastion" {
-  value = openstack_networking_floatingip_v2.bastion.address
-}
-
 data "openstack_networking_network_v2" "bastion" {
   name = var.bastion.network
 }
@@ -47,22 +43,8 @@ resource "openstack_compute_instance_v2" "bastion" {
   }
 }
 
-resource "local_file" "kubeconfig_file" {
-  content  = openstack_containerinfra_cluster_v1.homelab_cluster.kubeconfig.raw_config
-  filename = "kubeconfig-${openstack_containerinfra_cluster_v1.homelab_cluster.name}.yaml"
-  file_permission = "0600" # Set appropriate permissions
-}
-
-output "kubeconfig_path" {
-  value = local_file.kubeconfig_file.filename
-}
-
-data "openstack_networking_network_v2" "external" {
-  name = "external-net"
-}
-
 resource "openstack_networking_floatingip_v2" "bastion" {
-  pool = data.openstack_networking_network_v2.external.name
+  pool = openstack_networking_network_v2.external-network.name
 }
 
 resource "openstack_compute_floatingip_associate_v2" "bastion" {
