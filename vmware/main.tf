@@ -1,29 +1,46 @@
+locals {
+  datacenter_name = var.vsphere_infrastructure.datacenter_name
+  datastore_name = var.vsphere_infrastructure.datastore_name
+  cluster_name = var.vsphere_infrastructure.cluster_name
+  network_name = var.vsphere_infrastructure.network_name
+  content_library_name = var.content_library.name
+}
+
 data "vsphere_datacenter" "datacenter" {
-  name = var.datacenter_name
+  name = local.datacenter_name
 }
 
 data "vsphere_datastore" "datastore" {
-  name          = var.datastore_name
+  name          = local.datastore_name
   datacenter_id = data.vsphere_datacenter.datacenter.id
 }
 
 data "vsphere_compute_cluster" "cluster" {
-  name          = var.cluster_name
+  name          = local.cluster_name
   datacenter_id = data.vsphere_datacenter.datacenter.id
 }
 
 data "vsphere_network" "network" {
-  name          = var.network_name
+  name          = local.network_name
   datacenter_id = data.vsphere_datacenter.datacenter.id
 }
 
 data "vsphere_content_library" "library" {
-  name = var.content_library_name
+  name = local.content_library_name
+}
+
+locals {
+  content_library_item_type = var.content_library.item_type
+  vm_name = var.vm_config.name
+  vm_num_cpus = var.vm_config.num_cpus
+  vm_memory = var.vm_config.memory
+  vm_disk_label = var.vm_config.disk_label
+  vm_disk_size = var.vm_config.disk_size
 }
 
 data "vsphere_content_library_item" "template_ubuntu" {
   name       = "ubuntu-25.10-server"
-  type       = var.content_library_item_type
+  type       = local.content_library_item_type
   library_id = data.vsphere_content_library.library.id
 }
 
@@ -40,8 +57,8 @@ resource "vsphere_virtual_machine" "vm_bar" {
     template_uuid = data.vsphere_content_library_item.template_ubuntu.id
   }
 
-  num_cpus = var.vm_num_cpus
-  memory   = var.vm_memory
+  num_cpus = local.vm_num_cpus
+  memory   = local.vm_memory
 
   wait_for_guest_ip_timeout   = 0
   wait_for_guest_net_timeout  = 0
@@ -52,16 +69,16 @@ resource "vsphere_virtual_machine" "vm_bar" {
   }
 
   disk {
-    label            = var.vm_disk_label
-    size             = var.vm_disk_size
+    label            = local.vm_disk_label
+    size             = local.vm_disk_size
     unit_number      = 0
     eagerly_scrub    = false
     thin_provisioned = true
   }  # This is what triggers cloud-init (GuestInfo datasource)
   extra_config = {
     "guestinfo.metadata"             = base64encode(jsonencode({
-      "local-hostname" = var.vm_name
-      "instance-id"    = "id-${var.vm_name}"
+      "local-hostname" = local.vm_name
+      "instance-id"    = "id-${local.vm_name}"
     }))
     "guestinfo.userdata"             = base64encode(<<-EOF
       #cloud-config
@@ -70,7 +87,7 @@ resource "vsphere_virtual_machine" "vm_bar" {
         - name: ubuntu
           sudo: ALL=(ALL) NOPASSWD:ALL
           ssh_authorized_keys: ${var.public_keys}
-          
+
       package_update: true
       packages:
         - make
