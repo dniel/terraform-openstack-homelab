@@ -1,8 +1,8 @@
 locals {
-  datacenter_name = var.vsphere_infrastructure.datacenter_name
-  datastore_name = var.vsphere_infrastructure.datastore_name
-  cluster_name = var.vsphere_infrastructure.cluster_name
-  network_name = var.vsphere_infrastructure.network_name
+  datacenter_name      = var.vsphere_infrastructure.datacenter_name
+  datastore_name       = var.vsphere_infrastructure.datastore_name
+  cluster_name         = var.vsphere_infrastructure.cluster_name
+  network_name         = var.vsphere_infrastructure.network_name
   content_library_name = var.content_library.name
 }
 
@@ -31,11 +31,11 @@ data "vsphere_content_library" "library" {
 
 locals {
   content_library_item_type = var.content_library.item_type
-  vm_name = var.vm_config.name
-  vm_num_cpus = var.vm_config.num_cpus
-  vm_memory = var.vm_config.memory
-  vm_disk_label = var.vm_config.disk_label
-  vm_disk_size = var.vm_config.disk_size
+  vm_name                   = var.vm_config.name
+  vm_num_cpus               = var.vm_config.num_cpus
+  vm_memory                 = var.vm_config.memory
+  vm_disk_label             = var.vm_config.disk_label
+  vm_disk_size              = var.vm_config.disk_size
 }
 
 data "vsphere_content_library_item" "template_ubuntu" {
@@ -45,9 +45,9 @@ data "vsphere_content_library_item" "template_ubuntu" {
 }
 
 resource "vsphere_virtual_machine" "vm_bar" {
-  name             = "bar"
+  name = "bar"
 
-  firmware = "efi"
+  firmware                = "efi"
   efi_secure_boot_enabled = false
 
   resource_pool_id = data.vsphere_compute_cluster.cluster.resource_pool_id
@@ -74,17 +74,19 @@ resource "vsphere_virtual_machine" "vm_bar" {
     unit_number      = 0
     eagerly_scrub    = false
     thin_provisioned = true
-  }  # This is what triggers cloud-init (GuestInfo datasource)
+  }
+  # This is what triggers cloud-init (GuestInfo datasource)
   extra_config = {
-    "guestinfo.metadata"             = base64encode(jsonencode({
+    "guestinfo.metadata" = base64encode(jsonencode({
       "local-hostname" = local.vm_name
       "instance-id"    = "id-${local.vm_name}"
     }))
-    "guestinfo.userdata"             = base64encode(<<-EOF
+    "guestinfo.userdata" = base64encode(<<-EOF
       #cloud-config
       users:
         - default
         - name: ubuntu
+          groups: [docker]
           sudo: ALL=(ALL) NOPASSWD:ALL
           ssh_authorized_keys: ${var.public_keys}
 
@@ -92,14 +94,15 @@ resource "vsphere_virtual_machine" "vm_bar" {
       packages:
         - make
         - git
+        - neovim
 
       runcmd:
         - curl -fsSL https://tailscale.com/install.sh | sh
         - /usr/bin/tailscale up --ssh --advertise-tags=tag:bastion --authkey=${var.tailscale_authkey}
         - git clone --depth 1 https://github.com/dniel/terraform-openstack-homelab
-        - cd terraform-openstack-homelab && HOME=/home/ubuntu make tofu
+        - cd terraform-openstack-homelab && HOME=/home/ubuntu make tofu packer govc docker
       EOF
     )
-    "guestinfo.userdata.encoding"    = "base64"
+    "guestinfo.userdata.encoding" = "base64"
   }
 }
