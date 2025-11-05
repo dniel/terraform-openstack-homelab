@@ -37,13 +37,13 @@ jq: arkade
 
 packer:
 	wget -O - https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
-	echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(grep -oP '(?<=UBUNTU_CODENAME=).*' /etc/os-release || lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
+	echo "deb [arch=$$(dpkg --print-architecture) signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $$(grep -oP '(?<=UBUNTU_CODENAME=).*' /etc/os-release || lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
 	sudo apt update && sudo apt install packer
 
 govc:
 	# Extract govc binary to /usr/local/bin.
 	# Note: The "tar" command must run with root permissions.
-	curl -L -o - "https://github.com/vmware/govmomi/releases/latest/download/govc_$(uname -s)_$(uname -m).tar.gz" | tar -C /usr/local/bin -xvzf - govc
+	curl -L -o - "https://github.com/vmware/govmomi/releases/latest/download/govc_$$(uname -s)_$$(uname -m).tar.gz" | tar -C /usr/local/bin -xvzf - govc
 
 docker:
 	# Add Docker's official GPG key:
