@@ -100,7 +100,8 @@ resource "vsphere_virtual_machine" "vm_bar" {
         - curl -fsSL https://tailscale.com/install.sh | sh
         - /usr/bin/tailscale up --ssh --advertise-tags=tag:bastion --authkey=${var.tailscale_authkey}
         - git clone --depth 1 https://github.com/dniel/terraform-openstack-homelab
-        - cd terraform-openstack-homelab && HOME=/home/ubuntu make tofu packer govc docker
+        - cd /terraform-openstack-homelab/static/example
+        - HOME=/home/ubuntu make tofu packer govc docker
       EOF
     )
     "guestinfo.userdata.encoding" = "base64"
