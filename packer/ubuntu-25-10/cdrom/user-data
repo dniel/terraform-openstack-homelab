@@ -1,0 +1,15 @@
+#cloud-config
+ssh_pwauth: true
+autoinstall:
+  version: 1
+  identity:
+    hostname: ubuntu
+    username: ubuntu
+    password: "$6$rounds=4096$bLIIRK.GXqhnLO6O$4pda9boy6a4b50f8WJODDyyUfY8qfKr17oVTL.EDa1EtvjrXcsim7M.GBWMqf.2if5ieniTY.t5/IvvgXtroa/"
+  ssh:
+    install-server: true
+    allow-pw: true
+    authorized-keys: []
+  packages:
+    - openssh-server
+    - open-vm-tools

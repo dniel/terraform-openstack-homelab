@@ -1,0 +1,24 @@
+# Sample variables file for Packer
+# Rename this file to ../credentials.auto.pkrvars.hcl (in parent directory) or similar and fill in your actual values
+# DO NOT commit files containing actual credentials to version control
+
+# vCenter connection details
+vcenter_server   = "vcenter.example.com"
+vcenter_username = "administrator@vsphere.local"
+vcenter_password = "your-vcenter-password"
+
+# vCenter infrastructure details
+vcenter_cluster  = "YourCluster"
+vcenter_datastore = "YourDatastore"
+vcenter_network  = "YourNetwork"
+
+# SSH credentials for the VM
+ssh_username     = "ubuntu"
+ssh_password     = "ubuntu"
+
+# Note: For production use, consider using environment variables or a secrets manager
+# instead of storing credentials in files:
+# 
+# Example using environment variables:
+# export PKR_VAR_vcenter_password="your-password"
+# export PKR_VAR_ssh_password="your-ssh-password"
