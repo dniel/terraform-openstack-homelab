@@ -24,6 +24,8 @@ source "vsphere-iso" "yet-another-ubuntu" {
   CPUs = 2
   RAM  = 4096
 
+  firmware                = "efi"
+
   disk_controller_type = ["pvscsi"]
   guest_os_type = "ubuntu64Guest"
 
@@ -65,6 +67,10 @@ source "vsphere-iso" "yet-another-ubuntu" {
 
   convert_to_template = false
   folder              = "isos"
+
+  configuration_parameters = {
+    "disk.EnableUUID" = "true"
+  }
 }
 
 # --- Build definition ---

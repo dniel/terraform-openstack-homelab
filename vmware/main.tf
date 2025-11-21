@@ -39,7 +39,7 @@ locals {
 }
 
 data "vsphere_content_library_item" "template_ubuntu" {
-#  name       = "ubuntu-25.10-server"
+  #  name       = "ubuntu-25.10-server"
   name       = "yet-another-ubuntu"
   type       = local.content_library_item_type
   library_id = data.vsphere_content_library.library.id
