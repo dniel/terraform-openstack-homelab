@@ -92,6 +92,9 @@ resource "vsphere_virtual_machine" "vm_bar" {
           ssh_authorized_keys: ${var.public_keys}
 
       package_update: true
+      package_upgrade: true
+      package_reboot_if_required: true
+      
       packages:
         - make
         - git
